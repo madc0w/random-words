@@ -1,0 +1,67 @@
+<html>
+
+	<head>
+		<title>Random Minkish Words</title>
+		<script src="main.js"></script>
+		<style>
+			body {
+				font-family: Arial, Helvetica, sans-serif;
+			}
+
+			.button {
+				cursor: pointer;
+				border-radius: 4px;
+				padding: 8px;
+				max-width: 160px;
+				text-align: center;
+				font-weight: bold;
+				background-color: #8bb;
+				display: inline-block;
+				border-width: 4px;
+				border-style: double;
+				border-color: #444;
+			}
+
+			.button:hover {
+				background-color: #add;
+			}
+
+			#contorls {
+				margin: 12px;
+			}
+
+			#words {
+				margin: 12px;
+				line-height: 32px;
+			}
+
+			#voice-select-container {
+				margin-bottom: 12px;
+			}
+
+			.hidden {
+				visibility: hidden;
+			}
+
+		</style>
+	</head>
+
+	<body onLoad="load();">
+		<h1>Random Minkish Words</h1>
+		<hr />
+		<div id="controls">
+			<div id="voice-select-container">
+				Voice:
+				<select id="voice-select">
+					<option itemid="1">haha</option>
+					<option itemid="2">gaga</option>
+				</select>
+			</div>
+			<div class="button" onClick="generateWord();">Generate</div>
+			<div class="button hidden" id="say-all-words-button" onClick="sayAllWords();">Talk!</div>
+			<div class="button hidden" id="clear-words-button" onClick="clearWords();">Clear Everything</div>
+		</div>
+		<div id="words"> </div>
+	</body>
+
+</html>
