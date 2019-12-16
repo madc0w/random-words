@@ -2,28 +2,29 @@
 
 	<head>
 		<title>Random Minkish Words</title>
-		<script src="main.js"></script>
+		<script src="main.js" charset="utf-8"></script>
 		<style>
 			body {
 				font-family: Arial, Helvetica, sans-serif;
+				background-color: #eff;
 			}
 
 			.button {
 				cursor: pointer;
 				border-radius: 4px;
 				padding: 8px;
-				max-width: 160px;
+				width: 160px;
 				text-align: center;
 				font-weight: bold;
-				background-color: #8bb;
+				background-color: #acc;
 				display: inline-block;
-				border-width: 4px;
+				border-width: 6px;
 				border-style: double;
 				border-color: #444;
 			}
 
 			.button:hover {
-				background-color: #add;
+				background-color: #bee;
 			}
 
 			#contorls {
@@ -33,6 +34,15 @@
 			#words {
 				margin: 12px;
 				line-height: 32px;
+				border-width: 1px;
+				border-color: #444;
+				border-radius: 4px;
+				border-style: double;
+				background-color: #fff;
+				width: 200px;
+				height: 400px;
+				padding: 22px;
+				overflow-y: auto;
 			}
 
 			#voice-select-container {
@@ -52,16 +62,13 @@
 		<div id="controls">
 			<div id="voice-select-container">
 				Voice:
-				<select id="voice-select">
-					<option itemid="1">haha</option>
-					<option itemid="2">gaga</option>
-				</select>
+				<select id="voice-select"> </select>
 			</div>
 			<div class="button" onClick="generateWord();">Generate</div>
 			<div class="button hidden" id="say-all-words-button" onClick="sayAllWords();">Talk!</div>
 			<div class="button hidden" id="clear-words-button" onClick="clearWords();">Clear Everything</div>
 		</div>
-		<div id="words"> </div>
+		<div id="words" class="hidden"></div>
 	</body>
 
 </html>

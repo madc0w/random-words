@@ -1,3 +1,5 @@
+const defaultVoiceLanguage = 'pl';
+
 const consonants = [
 	'b',
 	'd',
@@ -23,7 +25,6 @@ const consonants = [
 	'dr',
 	'fr',
 	'f\'t',
-	'š',
 	'gr',
 	'grr',
 	'gw',
@@ -43,6 +44,17 @@ const consonants = [
 	'prr',
 	'p\'t',
 	'pš',
+	'r',
+	'rr',
+	's',
+	'ss',
+	'sk',
+	'sm',
+	'sn',
+	'sp',
+	'sr',
+	'srr',
+	'š',
 	'tr',
 	'trr',
 	'ts',
@@ -68,6 +80,7 @@ const vowels = [
 	'ö',
 	'öö',
 	'ou',
+	'ü',
 	'üü',
 	'u',
 	'uu',
@@ -86,10 +99,15 @@ function load() {
 			clearInterval(voiceCheckIntervalId);
 			voiceSelect.innerHTML = '';
 			var i = 0;
+			var selectedVoiceIndex = 0;
 			for (const voice of voices) {
 				// console.log('voice ', voice);
+				if (voice.lang.startsWith(defaultVoiceLanguage)) {
+					selectedVoiceIndex = i;
+				}
 				voiceSelect.innerHTML += `<option value="${i++}">${voice.name} (${voice.lang})</option>`;
 			}
+			voiceSelect.value = selectedVoiceIndex;
 		}
 	}, 20);
 }
@@ -104,14 +122,17 @@ function generateWord() {
 		word += arr[Math.floor(Math.random() * arr.length)];
 		isConsonant = !isConsonant;
 	} while (word.length < wordLength);
-	wordsDiv.innerHTML += word + '<br/>';
+	wordsDiv.innerHTML += word + ' <br/>';
 	speak(word);
 
 	sayAllWordsButton.className = 'button';
 	clearWordsButton.className = 'button';
+	wordsDiv.className = '';
+	wordsDiv.scrollTop = wordsDiv.scrollHeight;
 }
 
 function sayAllWords() {
+	console.log(wordsDiv.innerText);
 	speak(wordsDiv.innerText);
 }
 
@@ -119,11 +140,14 @@ function clearWords() {
 	wordsDiv.innerHTML = '';
 	sayAllWordsButton.className = 'hidden';
 	clearWordsButton.className = 'hidden';
+	wordsDiv.className = 'hidden';
 }
 
 function speak(str) {
-	const utterance = new SpeechSynthesisUtterance(str);
-	const i = parseInt(voiceSelect.selectedOptions.item(0).value);
-	utterance.voice = voices[i];
-	speechSynthesis.speak(utterance);
+	if (voices && voices.length > 0) {
+		const utterance = new SpeechSynthesisUtterance(str);
+		const i = parseInt(voiceSelect.selectedOptions.item(0).value);
+		utterance.voice = voices[i];
+		speechSynthesis.speak(utterance);
+	}
 }
