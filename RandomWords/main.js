@@ -87,11 +87,12 @@ const vowels = [
 ];
 
 
-var wordsDiv, sayAllWordsButton, clearWordsButton, voiceSelect, voices;
+var wordsDiv, sayAllWordsButton, clearWordsButton, generateInfiniteButton, voiceSelect, voices;
 function load() {
 	wordsDiv = document.getElementById('words');
 	sayAllWordsButton = document.getElementById('say-all-words-button');
 	clearWordsButton = document.getElementById('clear-words-button');
+	generateInfiniteButton = document.getElementById('generate-infinite-button');
 	voiceSelect = document.getElementById('voice-select');
 	const voiceCheckIntervalId = setInterval(() => {
 		voices = speechSynthesis.getVoices();
@@ -112,7 +113,7 @@ function load() {
 	}, 20);
 }
 
-function generateWord() {
+function generateWord(speakEndedCallback) {
 	const wordLength = 6 + Math.random() * 6;
 
 	var word = '';
@@ -123,7 +124,7 @@ function generateWord() {
 		isConsonant = !isConsonant;
 	} while (word.length < wordLength);
 	wordsDiv.innerHTML += word + ' <br/>';
-	speak(word);
+	speak(word, speakEndedCallback);
 
 	sayAllWordsButton.className = 'button';
 	clearWordsButton.className = 'button';
@@ -131,8 +132,25 @@ function generateWord() {
 	wordsDiv.scrollTop = wordsDiv.scrollHeight;
 }
 
+var isInfiniteRunning = false;
+function generateInfinite() {
+	isInfiniteRunning = !isInfiniteRunning;
+	if (isInfiniteRunning) {
+		function callback() {
+			if (isInfiniteRunning) {
+				generateWord(callback);
+			}
+		}
+		speak(wordsDiv.innerText, () => {
+			generateWord(callback);
+		});
+	}
+	document.getElementById('generate-infinite-inactive').className = isInfiniteRunning ? 'hidden' : '';
+	document.getElementById('generate-infinite-active').className = isInfiniteRunning ? '' : 'hidden';
+}
+
 function sayAllWords() {
-	console.log(wordsDiv.innerText);
+	// console.log(wordsDiv.innerText);
 	speak(wordsDiv.innerText);
 }
 
@@ -143,11 +161,14 @@ function clearWords() {
 	wordsDiv.className = 'hidden';
 }
 
-function speak(str) {
+function speak(str, endedCallback) {
 	if (voices && voices.length > 0) {
 		const utterance = new SpeechSynthesisUtterance(str);
 		const i = parseInt(voiceSelect.selectedOptions.item(0).value);
 		utterance.voice = voices[i];
+		if (endedCallback) {
+			utterance.addEventListener('end', endedCallback);
+		}
 		speechSynthesis.speak(utterance);
 	}
 }

@@ -21,10 +21,16 @@
 				border-width: 6px;
 				border-style: double;
 				border-color: #444;
+				height: 20px;
 			}
 
 			.button:hover {
 				background-color: #bee;
+			}
+
+			.button img {
+				height: 16px;
+				vertical-align: -2px;
 			}
 
 			#contorls {
@@ -50,7 +56,7 @@
 			}
 
 			.hidden {
-				visibility: hidden;
+				display: none;
 			}
 
 		</style>
@@ -65,6 +71,10 @@
 				<select id="voice-select"> </select>
 			</div>
 			<div class="button" onClick="generateWord();">Generate</div>
+			<div class="button bigger" id="generate-infinite-button" onClick="generateInfinite();">
+				<img id="generate-infinite-inactive" src="infinity.png" />
+				<span id="generate-infinite-active" class="hidden">MAKE IT STOP!</span>
+			</div>
 			<div class="button hidden" id="say-all-words-button" onClick="sayAllWords();">Talk!</div>
 			<div class="button hidden" id="clear-words-button" onClick="clearWords();">Clear Everything</div>
 		</div>
