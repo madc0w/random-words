@@ -51,8 +51,13 @@
 				overflow-y: auto;
 			}
 
-			#voice-select-container {
+			#voice-controls {
 				margin-bottom: 12px;
+			}
+
+			#voice-controls div {
+				display: inline;
+				margin-right: 12px;
 			}
 
 			.hidden {
@@ -66,9 +71,15 @@
 		<h1>Random Minkish Words</h1>
 		<hr />
 		<div id="controls">
-			<div id="voice-select-container">
-				Voice:
-				<select id="voice-select"> </select>
+			<div id="voice-controls">
+				<div id="voice-select-container">
+					Voice:
+					<select id="voice-select" onChange="saveState();"> </select>
+				</div>
+				<div id="shut-up-container">
+					<input type="checkbox" id="shut-up-checkbox" onChange="saveState();" />
+					<label for="shut-up-checkbox">Shut up!</label>
+				</div>
 			</div>
 			<div class="button" onClick="generateWord();">Generate</div>
 			<div class="button bigger" id="generate-infinite-button" onClick="generateInfinite();">

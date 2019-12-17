@@ -87,13 +87,14 @@ const vowels = [
 ];
 
 
-var wordsDiv, sayAllWordsButton, clearWordsButton, generateInfiniteButton, voiceSelect, voices;
+var wordsDiv, sayAllWordsButton, clearWordsButton, generateInfiniteButton, shutUpCheckbox, voiceSelect, voices;
 function load() {
 	wordsDiv = document.getElementById('words');
 	sayAllWordsButton = document.getElementById('say-all-words-button');
 	clearWordsButton = document.getElementById('clear-words-button');
 	generateInfiniteButton = document.getElementById('generate-infinite-button');
 	voiceSelect = document.getElementById('voice-select');
+	shutUpCheckbox = document.getElementById('shut-up-checkbox');
 	const voiceCheckIntervalId = setInterval(() => {
 		voices = speechSynthesis.getVoices();
 		if (voices && voices.length > 0) {
@@ -108,9 +109,18 @@ function load() {
 				}
 				voiceSelect.innerHTML += `<option value="${i++}">${voice.name} (${voice.lang})</option>`;
 			}
-			voiceSelect.value = selectedVoiceIndex;
+
+			voiceSelect.value = localStorage.voice || selectedVoiceIndex;
 		}
 	}, 20);
+
+	shutUpCheckbox.checked = true.toString() == localStorage.isShutUp;
+	if (localStorage.words) {
+		wordsDiv.innerHTML = localStorage.words;
+		wordsDiv.className = '';
+		sayAllWordsButton.className = 'button';
+		clearWordsButton.className = 'button';
+	}
 }
 
 function generateWord(speakEndedCallback) {
@@ -124,12 +134,13 @@ function generateWord(speakEndedCallback) {
 		isConsonant = !isConsonant;
 	} while (word.length < wordLength);
 	wordsDiv.innerHTML += word + ' <br/>';
-	speak(word, speakEndedCallback);
+	localStorage.words = wordsDiv.innerHTML;
 
 	sayAllWordsButton.className = 'button';
 	clearWordsButton.className = 'button';
 	wordsDiv.className = '';
 	wordsDiv.scrollTop = wordsDiv.scrollHeight;
+	speak(word, speakEndedCallback);
 }
 
 var isInfiniteRunning = false;
@@ -151,6 +162,7 @@ function generateInfinite() {
 
 function sayAllWords() {
 	// console.log(wordsDiv.innerText);
+	shutUpCheckbox.checked = false;
 	speak(wordsDiv.innerText);
 }
 
@@ -159,10 +171,11 @@ function clearWords() {
 	sayAllWordsButton.className = 'hidden';
 	clearWordsButton.className = 'hidden';
 	wordsDiv.className = 'hidden';
+	delete localStorage.words;
 }
 
 function speak(str, endedCallback) {
-	if (voices && voices.length > 0) {
+	if (voices && voices.length > 0 && !shutUpCheckbox.checked) {
 		const utterance = new SpeechSynthesisUtterance(str);
 		const i = parseInt(voiceSelect.selectedOptions.item(0).value);
 		utterance.voice = voices[i];
@@ -171,4 +184,9 @@ function speak(str, endedCallback) {
 		}
 		speechSynthesis.speak(utterance);
 	}
+}
+
+function saveState() {
+	localStorage.isShutUp = shutUpCheckbox.checked;
+	localStorage.voice = voiceSelect.value;
 }
